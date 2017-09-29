@@ -9,28 +9,28 @@ mycert_sensor = {
 logging = {
     default = {
         // file not starting with / is taken relative to LOCALESTATEDIR (e.g. /opt/dionaea/var)
-        file = "/var/log/dionaea/dionaea.log"
+        file = "/opt/dionaea/var/log/dionaea.log"
         levels = "all"
         domains = "*"
     }
 
     errors = {
         // file not starting with / is taken relative to LOCALESTATEDIR (e.g. /opt/dionaea/var)
-        file = "/var/log/dionaea/dionaea-errors.log"
+        file = "/opt/dionaea/var/log/dionaea-errors.log"
         levels = "warning,error"
         domains = "*"
     }
 }
 
-processors = 
-{ 
-    filter-emu = 
+processors =
+{
+    filter-emu =
     {
         config = {
             allow = [{ protocol = ["smbd","epmapper","nfqmirrord","mssqld"] }]
         }
         next = {
-            emu = 
+            emu =
             {
                 config = {
                     emulation = {
@@ -46,9 +46,9 @@ processors =
                         }
 
                         /**
-                         * api default arguments for development 
+                         * api default arguments for development
                          * disabled by default
-                         * not working yet 
+                         * not working yet
                          */
                         api = {
                             connect = {
@@ -62,7 +62,7 @@ processors =
         }
     }
 
-    filter-streamdumper = 
+    filter-streamdumper =
     {
         config = {
             allow = [
@@ -76,13 +76,13 @@ processors =
         next = {
             streamdumper = {
                 config = {
-                    path = "/var/lib/dionaea/bistreams/%Y-%m-%d/"
+                    path = "/opt/dionaea/var/lib/bistreams/%Y-%m-%d/"
                 }
             }
         }
     }
 
-/*  filter-sessions = 
+/*  filter-sessions =
     {
         config = {
             allow = [ { protocol = ["ftpctrl","remoteshell"] } ]
@@ -98,24 +98,24 @@ processors =
 
 downloads =
 {
-    dir = "/var/lib/dionaea/binaries"
+    dir = "/opt/dionaea/var/lib/binaries"
     tmp-suffix = ".tmp"
 }
 
 bistreams =
 {
-    python = 
+    python =
     {
-        dir = "/var/lib/dionaea/bistreams"
+        dir = "/opt/dionaea/var/lib/bistreams"
     }
 }
 
-submit = 
+submit =
 {
 /*
     defaults = {
         urls = ["http://anubis.iseclab.org/nepenthes_action.php",
-                "http://onlineanalyzer.norman.com/nepenthes_upload.php", 
+                "http://onlineanalyzer.norman.com/nepenthes_upload.php",
                 "http://luigi.informatik.uni-mannheim.de/submit.php?action=verify"]
         email = "nepenthesdev@gmail.com"
         file_fieldname = "upfile"
@@ -144,7 +144,7 @@ submit =
 */
 
 /*
-    yoursection = 
+    yoursection =
     {
         urls = ["http://127.0.0.1/submit"]
         email = "yourmail"
@@ -154,7 +154,7 @@ submit =
 */
 }
 
-listen = 
+listen =
 {
     /* basically we have 3 modes
        - getifaddrs - auto
@@ -168,23 +168,23 @@ listen =
          will do the trick
          if you want to throw in ipv6 support as well ...
          addrs = { eth0 = ["::"] }
-         note: ipv6 does not work with surfids yet, 
+         note: ipv6 does not work with surfids yet,
          as ipv6 addresses are mapped to ipv4 and surfids fails to retrieve the sensor id for ::ffff:1.2.3.4
-       - nl, will require a list of interfaces 
+       - nl, will require a list of interfaces
          fnmatch is possible like
          interfaces = ["ppp*","tun*"]
          and loading the nl module AFTER the python module in the modules section below
-         nl will use the kernel netlink interface to figure out which addresses exist 
+         nl will use the kernel netlink interface to figure out which addresses exist
          at runtime, and start/stop services dynamically per address per interface
     */
-         
+
     mode = "getifaddrs"
     addrs = { eth0 = ["::"] }
 }
 
 modules = {
 
-    curl = 
+    curl =
     {
         protocol = "http"
     }
@@ -194,23 +194,23 @@ modules = {
         profile = "1"
     }
 
-    pcap = 
+    pcap =
     {
-        /** 
-         * libpcap 1.0.0 
-         *  
-         * "Arithmetic expression against transport layer headers, like 
-         * tcp[0], does not work  against  IPv6  packets. It  only looks 
+        /**
+         * libpcap 1.0.0
+         *
+         * "Arithmetic expression against transport layer headers, like
+         * tcp[0], does not work  against  IPv6  packets. It  only looks
          * at IPv4 packets."
-         * 
-         * As a consequence, the default filter can not match 
+         *
+         * As a consequence, the default filter can not match
          * ipv6 tcp rst packets.
-         * 
+         *
          * If you want to go for rejected ipv6, remove the tcp matching part of the filter
-         * The code is capable to checking the tcp-rst flag and seq number itself, but 
+         * The code is capable to checking the tcp-rst flag and seq number itself, but
          * matching every packet in userspace is expensive.
          * Therefore you'll have to hack the code if you want to track ipv6 rejected connections
-         * 
+         *
          * Format is IFACE = { addrs = MODE }
          * currently mode is ignored
          */
@@ -221,9 +221,9 @@ modules = {
     }
 
     nfq =
-    { 
-        /** 
-         * queue has to be the nfqueue num 
+    {
+        /**
+         * queue has to be the nfqueue num
          * refer to http://dionaea.carnivore.it/#nfq_python
          * if you do not specify a queue-num with iptables, 0 is the default
          */
@@ -242,13 +242,13 @@ modules = {
                     "services",
                     "ihandlers"]
         ftp = {
-            root = "/var/lib/dionaea/wwwroot"
+            root = "/opt/dionaea/var/lib/wwwroot"
 
             /* ftp client section
              */
 
             /* ports for active ftp
-             * string indicating a range 
+             * string indicating a range
              */
             active-ports = "63001-64000"
 
@@ -259,10 +259,10 @@ modules = {
             active-host = "0.0.0.0"
         }
         tftp = {
-            root = "/var/lib/dionaea/wwwroot"
+            root = "/opt/dionaea/var/lib/wwwroot"
         }
         http = {
-            root = "/var/lib/dionaea/wwwroot"
+            root = "/opt/dionaea/var/lib/wwwroot"
             max-request-size = "32768" // maximum size in kbytes of the request (32MB)
         }
             upnp = {
@@ -287,7 +287,7 @@ modules = {
                                 location = "LOCATION: http://192.168.0.10:7677/MainTVServer2\r\n"
                                 opt      = "OPT: http://schemas.upnp.org/upnp/1/0/\r\n"
                         }
-            
+
                         xbox360 = {
                                 cache    = "CACHE-CONTROL: max-age=1800\r\n"
                                 st       = "ST: urn:microsoft.com:service:X_MS_MediaReceiverRegistrar:1\r\n"
@@ -308,7 +308,7 @@ modules = {
             tls = {
                 port = "5061"
             }
-            users = "/var/lib/dionaea/sipaccounts.sqlite"
+            users = "/opt/dionaea/var/lib/sipaccounts.sqlite"
             rtp = {
                 enable = "yes"
                 /* how to dump the rtp stream
@@ -317,7 +317,7 @@ modules = {
                 mode = ["bistream", "pcap"]
 
                 pcap = {
-                    path = "/var/lib/dionaea/rtp/{personality}/%Y-%m-%d/"
+                    path = "/opt/dionaea/var/lib/rtp/{personality}/%Y-%m-%d/"
                     filename = "%H:%M:%S_{remote_host}_{remote_port}_in.pcap"
                 }
             }
@@ -348,7 +348,7 @@ modules = {
                 play-hello = {
                     do = "play"
                     params = {
-                        file = "/var/lib/dionaea/.../file.ext"
+                        file = "/opt/dionaea/var/lib/.../file.ext"
                     }
                 }
             }
@@ -363,7 +363,7 @@ modules = {
         }
         virustotal = {
             apikey = "........." // grab it from your virustotal account at My account -> Inbox -> Public API
-            file = "/var/lib/dionaea/vtcache.sqlite"
+            file = "/opt/dionaea/var/lib/vtcache.sqlite"
         }
         mwserv = {          // ask your mwserv backend provider for needed values
             url = ""        // the url to send the submission requests to
@@ -395,7 +395,7 @@ modules = {
         logsql = {
             mode = "sqlite" // so far there is only sqlite
             sqlite = {
-                file = "/var/lib/dionaea/logsql.sqlite"
+                file = "/opt/dionaea/var/lib/logsql.sqlite"
             }
         }
         logxmpp = {
@@ -407,7 +407,7 @@ modules = {
                 server = "sensors.carnivore.it"
 
                 /**
-                 * as dionaea does not support starttls (xmpp on port 5223), 
+                 * as dionaea does not support starttls (xmpp on port 5223),
                  * we rely on 'legacy ssl' for the xmpp connection (port 5222)
                  */
                 port = "5223"
@@ -424,16 +424,16 @@ modules = {
                  * the default resource is a random string of 8 chars
                  */
                 // resource = "theresource"
-                config = 
+                config =
                 {
                     /**
                      * this defines a muc channel
                      */
-                    anon-events = 
+                    anon-events =
                     {
                         /**
                          * incidents matching these events will get relayed to the channel
-                         */ 
+                         */
                         events = ["^dionaea\x5c.connection\x5c..*",
                                     "^dionaea\x5c.modules\x5c.python\x5c.smb.dcerpc\x5c.*",
                                     "^dionaea\x5c.download\x5c.offer$",
@@ -453,18 +453,18 @@ modules = {
                     }
 
                     anon-files =
-                    { 
+                    {
                         events = ["^dionaea\x5c.download\x5c.complete\x5c.unique"]
                     }
                 }
             }
         }
         nfq = {
-            /** 
+            /**
              * nfq can intercept incoming tcp connections during the tcp handshake
-             * giving your honeypot the possibility to provide service on  
+             * giving your honeypot the possibility to provide service on
              * ports which are not served by default.
-             * refer to the documentation (http://dionaea.carnivore.it/#nfq_python) 
+             * refer to the documentation (http://dionaea.carnivore.it/#nfq_python)
              * BEFORE using this
              */
 
@@ -490,19 +490,19 @@ modules = {
         }
         p0f = {
             /**
-             * start p0f with 
+             * start p0f with
              * sudo p0f -i any -u root -Q /tmp/p0f.sock -q -l
              */
             path = "un:///tmp/p0f.sock"
         }
 
         fail2ban = {
-            downloads = "/var/lib/dionaea/downloads.f2b"
-            offers = "/var/lib/dionaea/offers.f2b"
+            downloads = "/opt/dionaea/var/lib/downloads.f2b"
+            offers = "/opt/dionaea/var/lib/offers.f2b"
         }
 
         ihandlers = {
-            handlers = ["ftpdownload", "tftpdownload", "emuprofile", "cmdshell", "store", "uniquedownload", 
+            handlers = ["ftpdownload", "tftpdownload", "emuprofile", "cmdshell", "store", "uniquedownload",
             "logsql",
             "mycertsensor",
 //          "virustotal",
@@ -522,7 +522,7 @@ modules = {
 
     }
 
-    nl = 
+    nl =
     {
         lookup_ethernet_addr = "no" // set to yes in case you are interested in the mac address  of the remote (only works for lan)
 
@@ -530,7 +530,7 @@ modules = {
 
 
     /* nc is a test module */
-/*  nc = 
+/*  nc =
     {
         services = [
             {
@@ -584,7 +584,7 @@ modules = {
                     listen = "15"
                     connect = "15"
                 }
-            },          
+            },
             {
                 proto = "redir"
                 type = "tls"
@@ -698,7 +698,7 @@ modules = {
                     connect = "15"
                     reconnect = "5"
                 }
-            }, 
+            },
             {
                 proto = "source"
                 type = "tls"
@@ -713,5 +713,3 @@ modules = {
     }
  */
 }
-
-
