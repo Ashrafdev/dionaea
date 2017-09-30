@@ -375,9 +375,9 @@ if test x$enable_ssl = "xyes" ; then
 		AC_CHECK_LIB([ssl],[SSL_connect],enable_ssl="yes", enable_ssl="no")
 		if test x$enable_ssl = "xyes" ; then
 			if test x$ssl_lib != "xno"; then
-				LIB_SSL_LIBS="-L$ssl_lib -lssl"
+				LIB_SSL_LIBS="-L$ssl_lib -lssl -lcrypto"
 			else
-				LIB_SSL_LIBS="-lssl"
+				LIB_SSL_LIBS="-lssl -lcrypto"
 			fi
 			if test x$ssl_inc != "xno"; then
 				LIB_SSL_CFLAGS="-I$ssl_inc"
