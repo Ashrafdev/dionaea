@@ -517,7 +517,7 @@ modules = {
         }
 
         services = {
-            serve = ["tftp", "ftp", "mirror", "smb","mssql", "mysql", "mqtt", "upnp"]
+            serve = ["tftp", "ftp", "mirror", "epmap", "smb", "mssql", "mysql", "mqtt", "upnp"]
         }
 
     }
