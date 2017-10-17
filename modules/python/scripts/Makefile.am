@@ -69,6 +69,7 @@ PYSCRIPTS += mqtt/mqtt.py
 PYSCRIPTS += mqtt/include/__init__.py
 PYSCRIPTS += upnp/__init__.py
 PYSCRIPTS += upnp/upnp.py
+PYSCRIPTS += mycertsensor.py
 
 
 all: $(PYSCRIPTS)
