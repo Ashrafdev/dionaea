@@ -20,5 +20,6 @@ install-data-local:
 		$(INSTALL_DATA) $(srcdir)/conf/dionaea.conf.dist $(DESTDIR)$(sysconfdir)/dionaea/dionaea.conf; \
 	fi
 	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/log
+	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/lib
 	
 
